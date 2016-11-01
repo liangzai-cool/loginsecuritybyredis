@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<style>
+  span.error {
+    color: red;
+  }
+  span.msg {
+    color: green;
+  }
+</style>
+</head>
+<body>
+<form action="" method="post">
+  <label>用户名</label><input type="text" name="username">
+  <label>密码</label><input type="text" name="password">
+  <button type="submit">登录</button>
+  <div></div>
+</form>
+
+<script>
+  (function($) {
+	  var $ = (selector) => document.querySelector(selector);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        var html = '';
+        var msgNode = '';
+        if (response.code != 0) {
+        	msgNode = 'error';
+        } else {
+        	msgNode = 'msg';
+        }
+        for (var key in response[msgNode]) {
+          html += '<span class="' + msgNode + '">' + response[msgNode][key] + '</span>';
+        }
+        $('div').innerHTML = html;
+      }
+    }
+	  
+	  var ajax = function(formData) {
+
+	    xhr.open('POST', '/api/auth/login.json', true);
+	    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); // 将请求头设置为表单方式提交
+	    xhr.send(formData);
+	  }
+	  $('form').addEventListener('submit', function(event) {
+		  event.preventDefault();
+	    var formData = '';
+ 		  for (var elem of ['username', 'password']) {
+ 			  var value = $('input[name="' + elem + '"]').value;
+ 			  formData += (elem + '=' + value + '&');
+		  }
+      ajax(formData);
+	  });
+  })();
+</script>
+</body>
+</html>
