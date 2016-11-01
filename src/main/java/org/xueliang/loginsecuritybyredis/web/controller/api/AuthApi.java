@@ -79,11 +79,11 @@ public class AuthApi {
 	 * @param jsonResponse
 	 * @return
 	 */
-	private LoginResultEnum checkoutMessage(String key, int count, JSONResponse jsonResponse) {
+	private void checkoutMessage(String key, int count, JSONResponse jsonResponse) {
 		if (count == 0) {
 			jsonResponse.setCode(0);
 			jsonResponse.addMsg("success", "恭喜，登录成功！");
-			return LoginResultEnum.SUCCESS;
+			return;
 		}
 		if (count >= MAX_TRY_COUNT) {
 			long pttlSeconds = jedis.pttl(key) / 1000;
@@ -93,16 +93,10 @@ public class AuthApi {
 			long seconds = sencondsRemain - minutes * 60;
 			jsonResponse.setCode(1);
 			jsonResponse.addError("login_disabled", "登录超过" + MAX_TRY_COUNT + "次，请" + hours + "小时" + minutes + "分" + seconds + "秒后再试！");
-			return LoginResultEnum.DISABLED;
+			return;
 		}
 		jsonResponse.setCode(1);
-		jsonResponse.addError("username_or_password_is wrong", "密码错误，您还有 " + (MAX_TRY_COUNT - count) + " 次机会！");
-		return LoginResultEnum.WRONG;
-	}
-	
-	public enum LoginResultEnum {
-		WRONG,
-		DISABLED,
-		SUCCESS
+		jsonResponse.addError("username_or_password_is_wrong", "密码错误，您还有 " + (MAX_TRY_COUNT - count) + " 次机会！");
+		return;
 	}
 }
