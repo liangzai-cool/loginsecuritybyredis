@@ -58,18 +58,10 @@ tasks.withType(JavaCompile) {
 // In this section you declare the dependencies for your production and test code
 dependencies {
   def springVersion = '4.3.2.RELEASE'
-  def log4jVersion = '2.7'
   
   compile "org.springframework:spring-web:$springVersion"
   compile "org.springframework:spring-webmvc:$springVersion"
   compile "redis.clients:jedis:2.9.0"
   compile "javax.servlet:javax.servlet-api:3.1.0"
-//  compile "net.sf.json-lib:json-lib:2.4:jdk15"
   compile "org.json:json:20160810"
-  
-  // The production code uses the LOG4J logging API at compile time
-  compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
-  compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
-  
-  testCompile 'junit:junit:4.12'
 }
