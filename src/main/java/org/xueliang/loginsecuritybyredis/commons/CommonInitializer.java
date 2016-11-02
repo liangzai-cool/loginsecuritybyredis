@@ -27,12 +27,9 @@ public class CommonInitializer implements WebApplicationInitializer {
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
 		context.register(WebAppConfig.class);
 		
-		// 添加一个filter并进行映射
-//		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter("UTF-8", true, true);
-		FilterRegistration.Dynamic dynamicFilter = servletContext.addFilter("characterEncodingFilter", CharacterEncodingFilter.class);
-		dynamicFilter.setInitParameter("encoding", "UTF-8");  
-		dynamicFilter.setInitParameter("forceEncoding", "true");  
-		dynamicFilter.setAsyncSupported(true);  
+		// 添加编码过滤器并进行映射
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter("UTF-8", true);
+		FilterRegistration.Dynamic dynamicFilter = servletContext.addFilter("characterEncodingFilter", characterEncodingFilter);
 		dynamicFilter.addMappingForUrlPatterns(null, true, "/*");
 		
 		// 添加静态资源映射
@@ -43,5 +40,4 @@ public class CommonInitializer implements WebApplicationInitializer {
 		ServletRegistration.Dynamic dynamicServlet = servletContext.addServlet("dispatcher", dispatcherServlet);
 		dynamicServlet.addMapping("/");
 	}
-
 }
