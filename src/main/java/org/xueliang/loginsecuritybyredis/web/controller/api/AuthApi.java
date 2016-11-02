@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +28,16 @@ import redis.clients.jedis.Jedis;
 public class AuthApi {
 
 	private static final Map<String, User> USER_DATA = new HashMap<String, User>();
-	private static final int MAX_TRY_COUNT = 5;
-	private static final int MAX_DISABLED_SECONDS = 60;
-	private static Jedis jedis;
+	@Value("${auth.max_try_count}")
+	private int MAX_TRY_COUNT = 0;
+	@Value("${auth.max_disabled_seconds}")
+	private int MAX_DISABLED_SECONDS = 0;
+	
+	@Value("${redis.host}")
+	private String host;
+	@Value("${redis.port}")
+	private int port;
+	private Jedis jedis;
 	
 	@PostConstruct
 	public void init() throws FileNotFoundException, IOException {
@@ -38,7 +46,7 @@ public class AuthApi {
 			String password = "password" + 0;
 			USER_DATA.put(username + "_" + password, new User(username, "nickname" + i));
 		}
-		jedis = new Jedis("localhost", 6379);
+		jedis = new Jedis(host, port);
 	}
 	
 	@RequestMapping(value = {"login"})
