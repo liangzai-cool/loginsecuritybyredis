@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,7 @@ public class AuthApi {
 	}
 	
 	@RequestMapping(value = {"login"})
-	public String login(HttpSession session, @RequestParam("username") String username, @RequestParam("password") String password) {
+	public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
 		JSONResponse jsonResponse = new JSONResponse();
 		String key = username;
 		String countString = jedis.get(key);
