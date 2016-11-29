@@ -42,12 +42,6 @@ gretty {
   port = 8080
   servletContainer = 'jetty9'
   contextPath = '/'
-  afterEvaluate {
-    appStartDebug {//修改debug时的监听端口，默认使用5005端口
-      debugPort = 8000   //此处填写端口号，如8080
-      debugSuspend = true
-    }
-  }
   // ... many more properties
 }
 
