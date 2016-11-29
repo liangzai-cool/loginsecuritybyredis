@@ -61,12 +61,21 @@ public class AuthApi {
 		User user = USER_DATA.get(username + "_" + password);
 		if (user == null) {
 			count++;
-			int secondsRemain = MAX_DISABLED_SECONDS;
-			if (exists && count < 5) {
-				secondsRemain = (int)(jedis.pttl(key) / 1000);
-			}
-			jedis.set(key, count + "");
-			jedis.expire(key, secondsRemain);
+//			int secondsRemain = MAX_DISABLED_SECONDS;
+//			if (exists && count < 5) {
+//				secondsRemain = (int)(jedis.pttl(key) / 1000);
+//			}
+//			jedis.set(key, count + "");
+//			jedis.expire(key, secondsRemain);
+			if (exists) {
+	            jedis.incr(key);
+	            if (count >= MAX_TRY_COUNT) {
+	                jedis.expire(key, MAX_DISABLED_SECONDS);
+	            }
+            } else {
+                jedis.set(key, count + "");
+                jedis.expire(key, MAX_DISABLED_SECONDS);
+            }
 			checkoutMessage(key, count, jsonResponse);
 			return jsonResponse.toString();
 		}
