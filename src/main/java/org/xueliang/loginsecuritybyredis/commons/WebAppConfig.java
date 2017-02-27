@@ -30,7 +30,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	 * @return
 	 */
 	@Bean
-	public ContentNegotiationManager contentNegotiationManager() {
+	public ContentNegotiationManager mvcContentNegotiationManager() {
 	    ContentNegotiationManagerFactoryBean contentNegotiationManagerFactoryBean = new ContentNegotiationManagerFactoryBean();
 	    contentNegotiationManagerFactoryBean.setFavorParameter(true);
 	    contentNegotiationManagerFactoryBean.setIgnoreAcceptHeader(true);
@@ -43,10 +43,10 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	public ContentNegotiatingViewResolver contentNegotiatingViewResolver(@Autowired ContentNegotiationManager contentNegotiationManager) {
+	public ContentNegotiatingViewResolver contentNegotiatingViewResolver(@Autowired ContentNegotiationManager mvcContentNegotiationManager) {
 		ContentNegotiatingViewResolver contentNegotiatingViewResolver = new ContentNegotiatingViewResolver();
 		contentNegotiatingViewResolver.setOrder(1);
-		contentNegotiatingViewResolver.setContentNegotiationManager(contentNegotiationManager);
+		contentNegotiatingViewResolver.setContentNegotiationManager(mvcContentNegotiationManager);
 		return contentNegotiatingViewResolver;
 	}
 	
