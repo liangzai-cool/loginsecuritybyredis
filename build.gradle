@@ -20,9 +20,8 @@ compileJava {
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     mavenLocal()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     mavenCentral()
     jcenter()
 }
@@ -42,6 +41,7 @@ gretty {
   port = 8080
   servletContainer = 'jetty9'
   contextPath = '/'
+  debugSuspend = false
   // ... many more properties
 }
 

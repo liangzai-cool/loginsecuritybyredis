@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.accept.ContentNegotiationManagerFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -29,7 +30,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	 * @return
 	 */
 	@Bean
-	public ContentNegotiationManagerFactoryBean contentNegotiationManagerFactoryBean() {
+	public ContentNegotiationManager contentNegotiationManager() {
 	    ContentNegotiationManagerFactoryBean contentNegotiationManagerFactoryBean = new ContentNegotiationManagerFactoryBean();
 	    contentNegotiationManagerFactoryBean.setFavorParameter(true);
 	    contentNegotiationManagerFactoryBean.setIgnoreAcceptHeader(true);
@@ -37,14 +38,15 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	    Properties mediaTypesProperties = new Properties();
 	    mediaTypesProperties.setProperty("json", MediaType.APPLICATION_JSON_UTF8_VALUE);
 	    contentNegotiationManagerFactoryBean.setMediaTypes(mediaTypesProperties);
-		return contentNegotiationManagerFactoryBean;
+	    contentNegotiationManagerFactoryBean.afterPropertiesSet();
+		return contentNegotiationManagerFactoryBean.getObject();
 	}
 	
 	@Bean
-	public ContentNegotiatingViewResolver contentNegotiatingViewResolver(@Autowired ContentNegotiationManagerFactoryBean contentNegotiationManagerFactoryBean) {
+	public ContentNegotiatingViewResolver contentNegotiatingViewResolver(@Autowired ContentNegotiationManager contentNegotiationManager) {
 		ContentNegotiatingViewResolver contentNegotiatingViewResolver = new ContentNegotiatingViewResolver();
 		contentNegotiatingViewResolver.setOrder(1);
-		contentNegotiatingViewResolver.setContentNegotiationManager(contentNegotiationManagerFactoryBean.getObject());
+		contentNegotiatingViewResolver.setContentNegotiationManager(contentNegotiationManager);
 		return contentNegotiatingViewResolver;
 	}
 	
